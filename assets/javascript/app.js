@@ -26,6 +26,8 @@ var answers = [
     console.log("first answer: " + answers[0])
     console.log("second answer: " + answers[1])
 
+var userChoices = [];
+
 $(document).ready(function() {
 
     for (var p = 0; p < questions.length; p++) {
@@ -34,17 +36,65 @@ $(document).ready(function() {
 
         var choices1 = choices[p];
         console.log("choices1:" + choices1);
-
         
         for (var r = 0; r < choices1.length; r++) {
-            $(".question").append('<input type="radio" name="choice" value="'+ r +'" id="choice'+ r +'">');
+            $(".question").append('<input type="radio" name="choice'+ p +'" value="'+ r +'" id="choice'+ r +'">');
             $(".question").append('<label id="answer'+ r +'">' + choices1[r] + '</label>');
             $(".question").append('<br>');
             console.log("choices1:" + choices1);
         }
-
     }
+    function choicesRandGen () {
+
+        var uniqueRandoms = [];
+        var numRandoms = 5;
+
+        function makeUniqueRandom() {
+            // refill the array if needed
+            if (!uniqueRandoms.length) {
+                for (var i = 1; i < numRandoms; i++) {
+                    uniqueRandoms.push(i);
+                }
+            }
+            var index = Math.floor(Math.random() * uniqueRandoms.length);
+            var val = uniqueRandoms[index];
+            console.log("val :" + val);
+
+            // now remove that value from the array
+            uniqueRandoms.splice(index, 1);
+
+            return val;
+
+        }
+
+        for (var i = 0; i < 5; i++) {
+            var rand = makeUniqueRandom();
+            console.log("rand: " + rand);
+        }
+            
+            console.log("uniqueRandoms: " + uniqueRandoms);
+
+
+            choice1 = uniqueRandoms[0];
+            choice2 = uniqueRandoms[1];
+            choice3 = uniqueRandoms[2];
+            choice4 = uniqueRandoms[3];
+            choice5 = uniqueRandoms[4];
+
+            console.log("choice1 :" + choice1);
+            console.log("choice2 :" + choice2);
+            console.log("choice3 :" + choice3);
+            console.log("choice4 :" + choice4);
+            console.log("choice5 :" + choice5);
+
+    };
+    choicesRandGen();
+
+
+
 });
+
+
 
 {/* <h3 id="questionHeader"></h3>
 
