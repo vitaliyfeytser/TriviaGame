@@ -21,22 +21,109 @@ var choices = [
 
 var answers = [
     "Superman",
-    "Jason Momoa"
+    "Jason Momoa",
+    "one",
+    "six",
+    "eleven"
     ];
     console.log("first answer: " + answers[0])
     console.log("second answer: " + answers[1])
 
-var userChoices = [];
+
+
+
+
+var uniqueChoicesIndex = [];
+var uniqueChoices = [];
 
 $(document).ready(function() {
 
+//     // generate choices randomly to keep the game more fun on replay
+//     function choicesRandGen () {
+       
+//         var uniqueRandoms = [];
+//         var numRandoms = 6;
+
+//         function makeUniqueRandom() {
+//             // refill the array if needed
+//             if (!uniqueRandoms.length) {
+//                 for (var i = 1; i < numRandoms; i++) {
+//                     uniqueRandoms.push(i);
+//                     console.log("i :" + i);
+//                 }
+//             }
+
+//             // choose random value from uniqueRandoms array
+//             var index = Math.floor(Math.random() * uniqueRandoms.length);
+//             console.log("choose random index : " + index);
+
+//             var val = uniqueRandoms[index];
+//             console.log("val of uniqueRandoms[index] :" + val);
+            
+//             // now remove that value from the array
+//             uniqueRandoms.splice(index, 1);
+//             console.log("spliced out index :" + index);
+//             console.log("uniqueRandoms after splice: " + uniqueRandoms);
+            
+//             console.log("return val: " + val);
+//             return val;
+            
+//         }
+                
+//         for (var r = 0; r < 5; r++) {
+//             var rand = makeUniqueRandom();
+//             uniqueChoicesIndex.push(rand);
+
+//             console.log("rand: " + rand);
+//         }
+
+//         console.log("uniqueRandoms: " + uniqueRandoms);
+//         console.log("uniqueChoicesIndex : " + uniqueChoicesIndex);
+
+
+//     };
+//     choicesRandGen();
+
+
+
+
+    // create question html and fill from questions array
     for (var p = 0; p < questions.length; p++) {
         $(".question").append("<br>");
         $(".question").append("<p>" + questions[p] + "</p>");
 
-        var choices1 = choices[p];
-        console.log("choices1:" + choices1);
+        console.log("uniqueChoicesIndex : " + uniqueChoicesIndex);
         
+        for (var t = 0; t < choices.length; t++) {
+            // align choices index with questions index
+            var choices2 = choices[p];
+            console.log("choices2 :" + choices2);
+
+            // randomize choices1 before print to html
+            var choices1 = choices2;
+            console.log("choices1 : " + choices1);
+                        
+            function shuffleArray() {
+                for (var i = choices1.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var temp = choices1[i];
+                    choices1[i] = choices1[j];
+                    choices1[j] = temp;
+                    console.log("temp : " + temp);
+                }
+            }
+            shuffleArray();
+
+        }
+        console.log("choices[t]:" + choices[t]);
+        console.log("choices1 = choices[t]:" + choices1 + " = " + choices[t]);
+
+
+
+        // var choicesToPrint = choices1[uniqueChoicesIndex];
+        // console.log("choicesToPrint : " + choicesToPrint);
+
+        // create choices html and fill from choices1 variable
         for (var r = 0; r < choices1.length; r++) {
             $(".question").append('<input type="radio" name="choice'+ p +'" value="'+ r +'" id="choice'+ r +'">');
             $(".question").append('<label id="answer'+ r +'">' + choices1[r] + '</label>');
@@ -44,51 +131,6 @@ $(document).ready(function() {
             console.log("choices1:" + choices1);
         }
     }
-    function choicesRandGen () {
-
-        var uniqueRandoms = [];
-        var numRandoms = 5;
-
-        function makeUniqueRandom() {
-            // refill the array if needed
-            if (!uniqueRandoms.length) {
-                for (var i = 1; i < numRandoms; i++) {
-                    uniqueRandoms.push(i);
-                }
-            }
-            var index = Math.floor(Math.random() * uniqueRandoms.length);
-            var val = uniqueRandoms[index];
-            console.log("val :" + val);
-
-            // now remove that value from the array
-            uniqueRandoms.splice(index, 1);
-
-            return val;
-
-        }
-
-        for (var i = 0; i < 5; i++) {
-            var rand = makeUniqueRandom();
-            console.log("rand: " + rand);
-        }
-            
-            console.log("uniqueRandoms: " + uniqueRandoms);
-
-
-            choice1 = uniqueRandoms[0];
-            choice2 = uniqueRandoms[1];
-            choice3 = uniqueRandoms[2];
-            choice4 = uniqueRandoms[3];
-            choice5 = uniqueRandoms[4];
-
-            console.log("choice1 :" + choice1);
-            console.log("choice2 :" + choice2);
-            console.log("choice3 :" + choice3);
-            console.log("choice4 :" + choice4);
-            console.log("choice5 :" + choice5);
-
-    };
-    choicesRandGen();
 
 
 
