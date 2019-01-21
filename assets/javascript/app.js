@@ -125,16 +125,54 @@ $(document).ready(function() {
 
         // create choices html and fill from choices1 variable
         for (var r = 0; r < choices1.length; r++) {
-            $(".question").append('<input type="radio" name="choice'+ p +'" value="'+ r +'" id="choice'+ r +'">');
+            $(".question").append('<input type="radio" onclick="reportResults()" name="choice'+ p +'" value="'+ r +'" id="choice'+ r +'">');
             $(".question").append('<label id="answer'+ r +'">' + choices1[r] + '</label>');
             $(".question").append('<br>');
             console.log("choices1:" + choices1);
         }
+
     }
 
 
+    var correctAnswers;
+    var incorrectAnswers;
+
+    function reportResults() {
+        // var radios = document.getElementsByName('name="choice'+ p +'"');
+        var radios = document.getElementsByName('name="choice0"');
+
+        for (var i = 0, length = radios.length; i < length; i++) {
+
+            if (radios[i].checked) {
+            // do whatever you want with the checked radio
+              alert(radios[i].value);
+                // if (radios[i].value === answers[p]) {
+                //     correctAnswers =+ 1;
+                // } else {
+                //     incorrectAnswers =+ 1;
+                // }
+            
+            // $(".results").append('<label id="correctAnswers">' + correctAnswers + '</label>');
+            // $(".results").append('<label id="incorrectAnswers">' + incorrectAnswers + '</label>');
+        
+        
+            // only one radio can be logically checked, don't check the rest
+            break;
+            }
+        }
+    };
+    reportResults();
+    // $("#see-results").click(reportResults());
+    $("#see-results").click(function() {
+        alert("you clicked me.")
+    });
+    
 
 });
+
+
+
+
 
 
 
