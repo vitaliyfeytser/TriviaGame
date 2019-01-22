@@ -92,10 +92,11 @@ $(document).ready(function() {
         $(".question").append("<br>");
         $(".question").append("<p>" + questions[p] + "</p>");
 
-        console.log("uniqueChoicesIndex : " + uniqueChoicesIndex);
+        // console.log("uniqueChoicesIndex : " + uniqueChoicesIndex);
         
         for (var t = 0; t < choices.length; t++) {
             // align choices index with questions index
+            
             var choices2 = choices[p];
             console.log("choices2 :" + choices2);
 
@@ -125,10 +126,12 @@ $(document).ready(function() {
 
         // create choices html and fill from choices1 variable
         for (var r = 0; r < choices1.length; r++) {
-            $(".question").append('<input type="radio" onclick="reportResults()" name="choice'+ p +'" value="'+ r +'" id="choice'+ r +'">');
-            $(".question").append('<label id="answer'+ r +'">' + choices1[r] + '</label>');
+
+            $(".question").append('<input type="radio" name="question'+ p +'" value="'+ r +'" id="choice">');
+            $(".question").append('<label id="answer'+ p +'">' + choices1[r] + '</label>');
             $(".question").append('<br>');
             console.log("choices1:" + choices1);
+            
         }
 
     }
@@ -139,7 +142,7 @@ $(document).ready(function() {
 
     function reportResults() {
         // var radios = document.getElementsByName('name="choice'+ p +'"');
-        var radios = document.getElementsByName('name="choice0"');
+        var radios = document.getElementsByName('name="question0"');
 
         for (var i = 0, length = radios.length; i < length; i++) {
 
@@ -162,9 +165,21 @@ $(document).ready(function() {
         }
     };
     reportResults();
+
+    $(document).ready( function() {
+        $('radio').on('click', alert("You clicked me"));
+        // OR //
+        // $('.some-class').click(slideonlyone('sms_box'));
+    });
+
     // $("#see-results").click(reportResults());
     $("#see-results").click(function() {
-        alert("you clicked me.")
+        alert("you clicked me.");
+    });
+
+    $("#choice").click(function() {
+        alert("you clicked a radio button");
+        console.log("clicked radio button");
     });
     
 
