@@ -87,16 +87,17 @@ $(document).ready(function() {
 
 
 
+
     // create question html and fill from questions array
     for (var p = 0; p < questions.length; p++) {
         $(".question").append("<br>");
+        $(".question").append("<fieldset>");
         $(".question").append("<p>" + questions[p] + "</p>");
 
         // console.log("uniqueChoicesIndex : " + uniqueChoicesIndex);
         
         for (var t = 0; t < choices.length; t++) {
             // align choices index with questions index
-            
             var choices2 = choices[p];
             console.log("choices2 :" + choices2);
 
@@ -115,8 +116,8 @@ $(document).ready(function() {
             }
             shuffleArray();
 
+            console.log("choices[t]:" + choices[t]);
         }
-        console.log("choices[t]:" + choices[t]);
         console.log("choices1 = choices[t]:" + choices1 + " = " + choices[t]);
 
 
@@ -127,65 +128,178 @@ $(document).ready(function() {
         // create choices html and fill from choices1 variable
         for (var r = 0; r < choices1.length; r++) {
 
-            $(".question").append('<input type="radio" name="question'+ p +'" value="'+ r +'" id="choice">');
+            $(".question").append('<input type="radio" name="choices'+ p +'" class="question'+ p +'" value="'+ choices[p][r] +'" id="choice'+ p + r +'">');
             $(".question").append('<label id="answer'+ p +'">' + choices1[r] + '</label>');
             $(".question").append('<br>');
             console.log("choices1:" + choices1);
             
         }
+        // close encapsulating div for question + choices
+        $(".question").append("</fieldset>");
 
     }
 
 
-    var correctAnswers;
-    var incorrectAnswers;
+    // function reportResults() {
+    //     // var radios = document.getElementsByName('name="choice'+ p +'"');
+    //     var radios = document.getElementsByName('name="question0"');
 
-    function reportResults() {
-        // var radios = document.getElementsByName('name="choice'+ p +'"');
-        var radios = document.getElementsByName('name="question0"');
+    //     for (var i = 0, length = radios.length; i < length; i++) {
 
-        for (var i = 0, length = radios.length; i < length; i++) {
-
-            if (radios[i].checked) {
-            // do whatever you want with the checked radio
-              alert(radios[i].value);
-                // if (radios[i].value === answers[p]) {
-                //     correctAnswers =+ 1;
-                // } else {
-                //     incorrectAnswers =+ 1;
-                // }
+    //         if (radios[i].checked) {
+    //         // do whatever you want with the checked radio
+    //           alert(radios[i].value);
+    //             // if (radios[i].value === answers[p]) {
+    //             //     correctAnswers =+ 1;
+    //             // } else {
+    //             //     incorrectAnswers =+ 1;
+    //             // }
             
-            // $(".results").append('<label id="correctAnswers">' + correctAnswers + '</label>');
-            // $(".results").append('<label id="incorrectAnswers">' + incorrectAnswers + '</label>');
+    //         // $(".results").append('<label id="correctAnswers">' + correctAnswers + '</label>');
+    //         // $(".results").append('<label id="incorrectAnswers">' + incorrectAnswers + '</label>');
         
         
-            // only one radio can be logically checked, don't check the rest
-            break;
-            }
-        }
-    };
-    reportResults();
+    //         // only one radio can be logically checked, don't check the rest
+    //         break;
+    //         }
+    //     }
+    // };
+    // reportResults();
 
-    $(document).ready( function() {
-        $('radio').on('click', alert("You clicked me"));
+   
+    // $('[type="radio"]').on('click', alert("You clicked a choice"));
         // OR //
         // $('.some-class').click(slideonlyone('sms_box'));
-    });
+
 
     // $("#see-results").click(reportResults());
     $("#see-results").click(function() {
         alert("you clicked me.");
     });
 
-    $("#choice").click(function() {
-        alert("you clicked a radio button");
+
+    var correctAnswers = "";
+    var incorrectAnswers = "";
+
+    
+    $('.question0').click(function() {
+        // alert("you clicked a radio button");
         console.log("clicked radio button");
+
+        var checkedRadio0 = document.querySelector('input[name="choices0"]:checked').value;
+        if (checkedRadio0 === answers[0]) {
+            correctAnswers =+ 1;
+            console.log("checkedRadio0: " + checkedRadio0 + "answers[0]: " + answers[0]);
+        } else {
+            incorrectAnswers =+ 1;
+        }
+        
+        console.log("correctAnswers: " + correctAnswers);
+        alert("you clicked a radio button value: " + checkedRadio0);
     });
+    
+    $('.question1').click(function() {
+        // alert("you clicked a radio button");
+        console.log("clicked radio button");
+
+        var checkedRadio1 = document.querySelector('input[name="choices1"]:checked').value;
+        if (checkedRadio1 === answers[1]) {
+            correctAnswers =+ 1;
+            console.log("checkedRadio1: " + checkedRadio1 + "answers[1]: " + answers[1]);
+        } else {
+            incorrectAnswers =+ 1;
+        }
+        
+        console.log("correctAnswers: " + correctAnswers);
+        alert("you clicked a radio button value: " + checkedRadio1);
+    });
+    
+    $('.question2').click(function() {
+        // alert("you clicked a radio button");
+        console.log("clicked radio button");
+
+        var checkedRadio2 = document.querySelector('input[name="choices2"]:checked').value;
+        if (checkedRadio2 === answers[2]) {
+            correctAnswers =+ 1;
+            console.log("checkedRadio2: " + checkedRadio2 + "answers[2]: " + answers[2]);
+        } else {
+            incorrectAnswers =+ 1;
+        }
+        
+        console.log("correctAnswers: " + correctAnswers);
+        alert("you clicked a radio button value: " + checkedRadio2);
+    });
+    
+    $('.question3').click(function() {
+        // alert("you clicked a radio button");
+        console.log("clicked radio button");
+
+        var checkedRadio3 = document.querySelector('input[name="choices3"]:checked').value;
+        if (checkedRadio3 === answers[3]) {
+            correctAnswers =+ 1;
+            console.log("checkedRadio3: " + checkedRadio3 + "answers[3]: " + answers[3]);
+        } else {
+            incorrectAnswers =+ 1;
+        }
+        
+        console.log("correctAnswers: " + correctAnswers);
+        alert("you clicked a radio button value: " + checkedRadio3);
+    });
+    
+    $('.question4').click(function() {
+        // alert("you clicked a radio button");
+        console.log("clicked radio button");
+
+        var checkedRadio4 = document.querySelector('input[name="choices4"]:checked').value;
+        if (checkedRadio4 === answers[4]) {
+            correctAnswers =+ 1;
+            console.log("checkedRadio4: " + checkedRadio4 + "answers[4]: " + answers[4]);
+        } else {
+            incorrectAnswers =+ 0;
+        }
+        
+        console.log("correctAnswers: " + correctAnswers);
+        alert("you clicked a radio button value: " + checkedRadio4);
+    });
+
+    // console.log("bottom correctAnswers: " + correctAnswers);
+    // console.log("bottom incorrectAnswers: " + incorrectAnswers);
+
+    
+    // $("#choice01").click(function() {
+    //     console.log("clicked radio button");
+
+    //     var checkedRadio = document.querySelector('input[name="choices"]:checked').value;
+    //     alert("you clicked a radio button value: " + checkedRadio);
+    // });
+
+    // $("#choice02").click(function() {
+    //     console.log("clicked radio button");
+
+    //     var checkedRadio = document.querySelector('input[name="choices"]:checked').value;
+    //     alert("you clicked a radio button value: " + checkedRadio);
+    // });
+
+    // $("#choice03").click(function() {
+    //     console.log("clicked radio button");
+
+    //     var checkedRadio = document.querySelector('input[name="choices"]:checked').value;
+    //     alert("you clicked a radio button value: " + checkedRadio);
+    // });
+
+    // $("#choice04").click(function() {
+    //     console.log("clicked radio button");
+
+    //     var checkedRadio = document.querySelector('input[name="choices"]:checked').value;
+    //     alert("you clicked a radio button value: " + checkedRadio);
+    // });
+
     
 
 });
 
-
+console.log("bottom correctAnswers: " + correctAnswers);
+console.log("bottom incorrectAnswers: " + incorrectAnswers);
 
 
 
