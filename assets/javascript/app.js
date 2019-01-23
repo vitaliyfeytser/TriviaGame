@@ -49,10 +49,8 @@ $(document).ready(function() {
     // create question html and fill from questions array
     for (var p = 0; p < questions.length; p++) {
         $(".question").append("<br>");
-        $(".question").append("<fieldset>");
+        $(".question").append("<fieldset>"); // open encapsulating div for question + choices
         $(".question").append("<p>" + questions[p] + "</p>");
-
-        // console.log("uniqueChoicesIndex : " + uniqueChoicesIndex);
         
         for (var t = 0; t < choices.length; t++) {
             // align choices index with questions index
@@ -122,7 +120,6 @@ $(document).ready(function() {
         // alert("you clicked a radio button");
         console.log("clicked radio button");
         
-
         var checkedRadio0 = document.querySelector('input[name="choices0"]:checked').value;
         if (checkedRadio0 === answers[0]) {
             userAnswers[0] = 1;
@@ -209,8 +206,8 @@ $(document).ready(function() {
         // alert("you clicked a radio button value: " + checkedRadio4);
     });    
 
-    console.log("userAnswers: " + userAnswers);
-    console.log("bottom correctAnswers: " + correctAnswers);
-    console.log("bottom incorrectAnswers: " + incorrectAnswers);
+    console.log("11111 bottom userAnswers: " + userAnswers);
+    console.log("11111 bottom correctAnswers: " + correctAnswers);
+    console.log("11111 bottom incorrectAnswers: " + incorrectAnswers);
 });
 
