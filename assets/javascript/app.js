@@ -1,5 +1,6 @@
 
 // DECLARE VARIABLES AND SET CONTENT ARRAYS
+
 var questions = [
     "Which famous comicbook superhero's name was borrowed from the philosopher Nietzsche?",
     "Which actor plays Aquaman in 'Aquaman' of 2018?",
@@ -31,19 +32,15 @@ var answers = [
     console.log("first answer: " + answers[0])
     console.log("second answer: " + answers[1])
 
-
-var uniqueChoicesIndex = [];
-var uniqueChoices = [];
-
 var userAnswers = [];
 var correctAnswers = 0;
-var incorrectAnswers = answers.length - correctAnswers;
-
+var incorrectAnswers = 0;
 
 
 
 // CREATE HTML WITH CONTENT 
-$(document).ready(function() {
+
+$(document).ready(function loadContent() {
     // empty the target div for questions and choices
     $('.question').empty();
     // create question html and fill from questions array
@@ -88,10 +85,14 @@ $(document).ready(function() {
         // close encapsulating div for question + choices
         $(".question").append("</fieldset>");
 
+        
+        
     }
+    
+    $(".question").append('<button id="see-results">See Results</button>');
 
 
-    // GET USER FEEDBACK
+    // DISPLAY RESULTS
 
     $("#see-results").click(function() {
         // alert("you clicked me.");
@@ -102,20 +103,58 @@ $(document).ready(function() {
             answersTotal += userAnswers[i] << 0;
         }
         correctAnswers = answersTotal;
+        // UPDATE INCORRECT ANSWERS COUNT
+        incorrectAnswers = answers.length - answersTotal;
 
         // GET PERCENTILE VALUE OF ANSWERS
         var percentCorrrect = parseInt(( 100 / questions.length ) * correctAnswers);   
         console.log("percentCorrrect: " + percentCorrrect);
 
         // PRINT RESULTS
-        $('.results').empty();
-        $(".results").append('<div id="percent">Your score is: ' + percentCorrrect + ' %</div>');
-        $(".results").append('<div id="correct">Correct: ' + correctAnswers + '</div>');
-        $(".results").append('<div id="incorrect">Incorrect: ' + incorrectAnswers + '</div>');
+        $('.question').empty();
+        $(".question").append('<div id="percent">Your score is: ' + percentCorrrect + ' %</div>');
+        $(".question").append('<div id="correct">Correct: ' + correctAnswers + '</div>');
+        $(".question").append('<div id="incorrect">Incorrect: ' + incorrectAnswers + '</div>');
+        $(".question").append('<button id="try-again" onclick="loadContent()">Try Again</button>');
+        
+
+        // $('.results').empty();
+        // $(".results").append('<div id="percent">Your score is: ' + percentCorrrect + ' %</div>');
+        // $(".results").append('<div id="correct">Correct: ' + correctAnswers + '</div>');
+        // $(".results").append('<div id="incorrect">Incorrect: ' + incorrectAnswers + '</div>');
     });
 
 
     // USER ANSWERS
+
+    // // ATTEMPT TO GENERALIZE THE FUNCTIONS BELOW
+
+    // $('.question0').click(function() {
+    //     // alert("you clicked a radio button");
+    //     console.log("clicked radio button");
+        
+    //     function radioRead() {
+    //         var checkedRadio = document.querySelector('input[class="question'+ p +'"]:checked').value;
+    //         if (checkedRadio === answers[p]) {
+    //             userAnswers[p] = 1;
+    //             console.log("checkedRadio: " + checkedRadio + "answers[p]: " + answers[p]);
+    //         } else {
+    //             userAnswers[p] = 0;
+    //         }
+    //     }
+    //     radioRead();
+        
+        
+    //     console.log("p: " + p);
+    //     console.log("userAnswers: " + userAnswers);
+    //     console.log("correctAnswers: " + correctAnswers);
+    //     console.log("incorrectAnswers: " + incorrectAnswers);
+    //     // alert("you clicked a radio button value: " + checkedRadio0);
+    // });
+
+    // // ------------------------------------------------------------- //
+
+
     $('.question0').click(function() {
         // alert("you clicked a radio button");
         console.log("clicked radio button");
