@@ -73,40 +73,62 @@ $(document).ready(function () {
     // myfunction()
 
     // WRITE A FUNCTION TO GENERATE THE HTML WITH ALL THE DATA AND REPLACE THE questionsDiv
-    for (let i = 1; i <= dataObj.questions.length; i++) {
-        var $answerBtns = []
-        var $question = $(
-            "<h3>", {
-                class: "question display-6",
-                text: dataObj.questions[i]
-            })
-        for (let k = 1; k <= dataObj.choices.length; k++) {
-            var $answerBtn = $(
-                "<div>", {
-                    class: "btn-toolbar",
-                    "role": "toolbar",
-                    "aria-label": "Toolbar with button groups"
+    function generateHtml() {
+        for (let i = 1; i <= dataObj.questions.length; i++) {
+            var $answerBtns = []
+            var $question = $(
+                "<h3>", {
+                    class: "question display-6",
+                    text: dataObj.questions[i]
                 }).append(
+                    $answerBtns
+                )
+            for (let k = 1; k <= dataObj.choices.length; k++) {
+                var $answerBtn = $(
                     "<div>", {
-                        class: "btn-group mr-2",
-                        role: "group",
-                        "aria-label": "Answer group"
+                        class: "btn-toolbar",
+                        "role": "toolbar",
+                        "aria-label": "Toolbar with button groups"
                     }).append(
-                        "<button>", {
-                            id: "answer" + k,
-                            type: "button",
-                            class: "btn btn-outline-secondary answer",
-                            text: dataObj.choices[k]
-                        }
-                    )
-                    $answerBtns.push($answerBtn)
+                        "<div>", {
+                            class: "btn-group mr-2",
+                            role: "group",
+                            "aria-label": "Answer group"
+                        }).append(
+                            "<button>", {
+                                id: "answer" + k,
+                                type: "button",
+                                class: "btn btn-outline-secondary answer",
+                                text: dataObj.choices[k]
+                            }
+                        )
+                $answerBtns.push($answerBtn)
+
+            }
+            var $submitBtn = $(
+                "<div>", {
+                    class: "mr-3"
+                }).append(
+                    "<a>", {
+                        class: "btn btn-success btn mr-2",
+                        id: "submit-btn-q-1",
+                        role: "button",
+                        text: "Submit Answer"
+                    }
+
+                )
+            var $timerHtml = $(
+                "<p>", {
+                    class: "lead",
+                    text: "00:03"
+                }
+            )
 
         }
-        var submitBtn = $(
-            
-        )
-
+        // $(".questionDiv").html("")
+        $(".questionDiv").apppend($question + $submitBtn + $timerHtml)
     }
+    generateHtml()
 
 
     console.log("choices.length: ", dataObj.choices.length)
