@@ -126,7 +126,7 @@ $(document).ready(function () {
 
         }
         // $(".questionDiv").html("")
-        $(".questionDiv").apppend($question + $submitBtn + $timerHtml)
+        $(".questionDiv").append($question + $submitBtn + $timerHtml)
     }
     generateHtml()
 
