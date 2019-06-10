@@ -39,19 +39,12 @@ $(document).ready(function () {
 
     // START PAGE WITH INSTRUCTIONS .... WRITE OUT INSTRUSTIONS FOR THE GAME
 
-    // Set question text
-    // $('.question').append({
-    //     text: "JS Question"
-    // })
-
-
     // setTimeout(function() { 
     //     $('.answer').toggleClass('btn-outline-secondary')}, 2000)
     // setTimeout(function(){ $('.answer').toggleClass('btn-outline-primary')}, 2000)
     // setTimeout(function(){ $('.answer').toggleClass('btn-outline-danger')}, 2000)
     // // setTimeout( $('.answer').toggleClass('btn-outline-primary'), 2000)
     // // setTimeout( $('.answer').toggleClass('btn-outline-danger'), 2000)
-
 
     // function myfunction() {
     //     longfunctionfirst(shortfunctionsecond);
@@ -74,59 +67,76 @@ $(document).ready(function () {
 
     // WRITE A FUNCTION TO GENERATE THE HTML WITH ALL THE DATA AND REPLACE THE questionsDiv
     function generateHtml() {
-        for (let i = 1; i <= dataObj.questions.length; i++) {
-            var $answerBtns = []
+
+        for (let i = 0; i < dataObj.questions.length; i++) {
+            // let i = 1
+            // Create the single question container div
+            var $singleQuestionContainer = $(
+                "<div>", {
+                    class: "single-question container collapse",
+                    id: "container" + i
+                }
+            )
+            // Create the question div
             var $question = $(
                 "<h3>", {
                     class: "question display-6",
                     text: dataObj.questions[i]
-                }).append(
-                    $answerBtns
-                )
-            for (let k = 1; k <= dataObj.choices.length; k++) {
+                }).appendTo($singleQuestionContainer)
+
+            // Generate answer buttons container
+            var $answerBtnContainer = $(
+                "<div>", {
+                    class: "btn-toolbar",
+                    "role": "toolbar",
+                    "aria-label": "Toolbar with button groups"
+                }).appendTo($singleQuestionContainer)
+
+            // Generate answer buttons for the question
+            for (let k = 0; k < dataObj.choices.length; k++) {
                 var $answerBtn = $(
                     "<div>", {
-                        class: "btn-toolbar",
-                        "role": "toolbar",
-                        "aria-label": "Toolbar with button groups"
-                    }).append(
-                        "<div>", {
-                            class: "btn-group mr-2",
-                            role: "group",
-                            "aria-label": "Answer group"
-                        }).append(
-                            "<button>", {
-                                id: "answer" + k,
-                                type: "button",
-                                class: "btn btn-outline-secondary answer",
-                                text: dataObj.choices[k]
-                            }
-                        )
-                $answerBtns.push($answerBtn)
+                        class: "btn-group mr-2",
+                        "role": "group",
+                        "aria-label": "Answer group"
+                    }).appendTo($answerBtnContainer)
 
+                let $innerBtn = $(
+                    "<button>", {
+                        "id": "answer" + i + k,
+                        "type": "button",
+                        class: "btn btn-outline-secondary answer",
+                        text: dataObj.choices[i][k]
+                    }
+                ).appendTo($answerBtn)
             }
+
+
+            // Generate the answer submit button
             var $submitBtn = $(
                 "<div>", {
                     class: "mr-3"
-                }).append(
-                    "<a>", {
-                        class: "btn btn-success btn mr-2",
-                        id: "submit-btn-q-1",
-                        role: "button",
-                        text: "Submit Answer"
-                    }
+                }).appendTo($singleQuestionContainer)
 
-                )
+            $("<a>", {
+                class: "btn btn-success btn mr-2",
+                "id": "submit-btn-q-" + i,
+                "role": "button",
+                text: "Submit Answer"
+            }
+            ).appendTo($submitBtn)
+
             var $timerHtml = $(
                 "<p>", {
                     class: "lead",
                     text: "00:03"
                 }
-            )
+            ).appendTo($singleQuestionContainer)
 
+
+            $(".questionDiv").append($singleQuestionContainer)
         }
-        // $(".questionDiv").html("")
-        $(".questionDiv").append($question + $submitBtn + $timerHtml)
+        setTimeout(createEventListeners(), 3000)
     }
     generateHtml()
 
@@ -134,41 +144,55 @@ $(document).ready(function () {
     console.log("choices.length: ", dataObj.choices.length)
 
     function createEventListeners() {
-        for (let i = 1; i <= dataObj.choices.length; i++) {
-            var clickAnswer = []
+        // on show of single question run these listener setters
 
-            $('#answer' + i).click(function () {
-                clickAnswer.splice(0, 1, i)
-                console.log('clickAnswer: ', clickAnswer)
-                for (let k = 1; k <= dataObj.choices.length; k++) {
-                    $('#answer' + k).addClass('btn-outline-secondary').removeClass('btn-outline-success')
-                    $('#answer' + i).addClass('btn-outline-success').removeClass('btn-outline-secondary')
-                }
-                console.log("dataObj.userAnswers: ", dataObj.userAnswers)
-            })
+        for (let v = 0; v < dataObj.questions.length; v++) {
+            for (let i = 0; i < dataObj.choices.length; i++) {
+                var clickAnswer
 
-            // OnSubmit event listener
-            $('#submit-btn-q-' + i).click(function () {
+                $('#answer' + v + i).click(function () {
+                    clickAnswer = "" + v + i
+                    console.log('clickAnswer: ', clickAnswer)
+                    for (let k = 0; k < dataObj.choices.length; k++) {
+                        let green = '#answer' + v + k
+                        let grey = '#answer' + v + i
+                        $(green).addClass('btn-outline-secondary').removeClass('btn-outline-success')
+                        $(grey).addClass('btn-outline-success').removeClass('btn-outline-secondary')
+                    }
+                    console.log("dataObj.userAnswers: ", dataObj.userAnswers)
+                })
 
-                console.log('submit clickAnswer: ', clickAnswer)
-                console.log('submit clickAnswer[0]: ', clickAnswer[0])
-                console.log('submit clickAnswer[1]: ', clickAnswer[1])
-                dataObj.userAnswers.splice(i - 1, 1, clickAnswer[0])
-                dataObj.userAnswers.splice(2, 1, "third")
-                console.log("dataObj.userAnswers: ", dataObj.userAnswers)
-            })
-            // Skip question button event listener
-            $('#skip-btn-q-' + i).click(function () {
-                // write skip code
-            })
+                // OnSubmit event listener
+                $('#submit-btn-q-' + i).click(function () {
+                    console.log('submit clickAnswer: ', clickAnswer)
+                    dataObj.userAnswers.splice(i, 1, clickAnswer)
+                    console.log("dataObj.userAnswers: ", dataObj.userAnswers)
+                })
 
-            // Forfeit event listener
-            $('#forfeit').click(function () {
-                // write forfeit code
-            })
+                // Skip question button event listener
+                $('#skip-btn-q-' + 'i').click(function () {
+                    // write skip code
+                })
+
+                // Forfeit event listener
+                $('#forfeit').click(function () {
+                    // write forfeit code
+                })
+            }
         }
     }
-    createEventListeners()
+
+    // Show first question
+    $("#container0").removeClass('collapse')
+    // Set next question to the skip button
+    $(".skip-btn").attr('nextq', 1)
+    // Set click event listener on the skip button
+    $(".skip-btn").click(function () {
+        let nextq = $(".skip-btn").attr("nextq") < dataObj.questions.length ? $(".skip-btn").attr("nextq") : 0
+        $("#container" + nextq).removeClass('collapse')
+        $("#container" + (parseInt(nextq, 10) - 1)).addClass('collapse')
+        $(".skip-btn").attr('nextq', (parseInt(nextq, 10) + 1))
+    })
 
 
 });
