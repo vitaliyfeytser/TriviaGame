@@ -147,38 +147,72 @@ $(document).ready(function () {
         // on show of single question run these listener setters
 
         for (let v = 0; v < dataObj.questions.length; v++) {
+
             for (let i = 0; i < dataObj.choices.length; i++) {
-                var clickAnswer
+                var clickAnswer = ""
 
                 $('#answer' + v + i).click(function () {
                     clickAnswer = "" + v + i
                     console.log('clickAnswer: ', clickAnswer)
+                    // set answer-buttons' colors
                     for (let k = 0; k < dataObj.choices.length; k++) {
-                        let green = '#answer' + v + k
-                        let grey = '#answer' + v + i
-                        $(green).addClass('btn-outline-secondary').removeClass('btn-outline-success')
-                        $(grey).addClass('btn-outline-success').removeClass('btn-outline-secondary')
+                        let grey = '#answer' + v + k
+                        let green = '#answer' + v + i
+                        $(grey).addClass('btn-outline-secondary').removeClass('btn-outline-success')
+                        $(green).addClass('btn-outline-success').removeClass('btn-outline-secondary')
                     }
                     console.log("dataObj.userAnswers: ", dataObj.userAnswers)
                 })
-
-                // OnSubmit event listener
-                $('#submit-btn-q-' + i).click(function () {
-                    console.log('submit clickAnswer: ', clickAnswer)
-                    dataObj.userAnswers.splice(i, 1, clickAnswer)
-                    console.log("dataObj.userAnswers: ", dataObj.userAnswers)
-                })
-
-                // Skip question button event listener
-                $('#skip-btn-q-' + 'i').click(function () {
-                    // write skip code
-                })
-
-                // Forfeit event listener
-                $('#forfeit').click(function () {
-                    // write forfeit code
-                })
             }
+
+            // OnSubmit event listener
+            $('#submit-btn-q-' + v).click(function () {
+                console.log('submit clickAnswer: ', clickAnswer)
+                dataObj.userAnswers.splice(v, 1, clickAnswer)
+                console.log("dataObj.userAnswers: ", dataObj.userAnswers)
+
+                // Navigate to next question
+                let nextq = v < dataObj.choices.length ? v + 1 : null
+                $("#container" + nextq).removeClass('collapse')
+                $("#container" + (parseInt(nextq, 10) - 1)).addClass('collapse')
+                // Put the answer button into a container and append to answerDiv
+                let $answerBtn = $(
+                    "<div>", {
+                        class: "btn-group mr-2",
+                        "role": "group",
+                        "aria-label": "Answer group"
+                    }).appendTo(".answerDiv")
+
+                // 'None button' when nothing is selected on submit
+                let $noneBtn = $(
+                    "<div>", {
+                        class: "btn-group mr-2",
+                        "role": "group",
+                        "aria-label": "Answer group"
+                    })
+                    // .appendTo(".answerDiv")
+                let $innerNoneBtn = $(
+                    "<button>", {
+                        "type": "button",
+                        class: "btn btn-outline-secondary answer answer-none",
+                        text: "None"
+                    }
+                ).appendTo($noneBtn)
+
+                clickAnswer !== "" ? $("#answer" + clickAnswer).appendTo($answerBtn) : $noneBtn.appendTo(".answerDiv")
+                clickAnswer = ""
+            })
+
+            // Skip question button event listener
+            $('#skip-btn-q-' + 'i').click(function () {
+                // write skip code
+            })
+
+            // Forfeit event listener
+            $('#forfeit').click(function () {
+                // write forfeit code
+            })
+
         }
     }
 
@@ -188,7 +222,7 @@ $(document).ready(function () {
     $(".skip-btn").attr('nextq', 1)
     // Set click event listener on the skip button
     $(".skip-btn").click(function () {
-        let nextq = $(".skip-btn").attr("nextq") < dataObj.questions.length ? $(".skip-btn").attr("nextq") : 0
+        let nextq = $(".skip-btn").attr("nextq") < dataObj.questions.length ? $(".skip-btn").attr("nextq") : null
         $("#container" + nextq).removeClass('collapse')
         $("#container" + (parseInt(nextq, 10) - 1)).addClass('collapse')
         $(".skip-btn").attr('nextq', (parseInt(nextq, 10) + 1))
