@@ -25,7 +25,9 @@ var dataObj = {
         "Japan"
     ],
 
-    userAnswers: [0, 0, 0, 0, 0],
+    userAnswers: [99, 99, 99, 99, 99],
+
+    answersBoolean: [0, 0, 0, 0, 0],
 
     correctAnswers: 0,
 
@@ -150,7 +152,8 @@ $(document).ready(function () {
 
             for (let i = 0; i < dataObj.choices.length; i++) {
                 var clickAnswer = ""
-
+                // select chosen answer by id that is comprised of dataObj.questions index and 
+                // dataObj.choices index
                 $('#answer' + v + i).click(function () {
                     clickAnswer = "" + v + i
                     console.log('clickAnswer: ', clickAnswer)
@@ -165,8 +168,8 @@ $(document).ready(function () {
                 })
             }
 
-            // OnSubmit event listener
-            $('#submit-btn-q-' + v).click(function () {
+            function submit() {
+                // splice in the user answer over dummy data
                 console.log('submit clickAnswer: ', clickAnswer)
                 dataObj.userAnswers.splice(v, 1, clickAnswer)
                 console.log("dataObj.userAnswers: ", dataObj.userAnswers)
@@ -190,7 +193,6 @@ $(document).ready(function () {
                         "role": "group",
                         "aria-label": "Answer group"
                     })
-                    // .appendTo(".answerDiv")
                 let $innerNoneBtn = $(
                     "<button>", {
                         "type": "button",
@@ -201,20 +203,52 @@ $(document).ready(function () {
 
                 clickAnswer !== "" ? $("#answer" + clickAnswer).appendTo($answerBtn) : $noneBtn.appendTo(".answerDiv")
                 clickAnswer = ""
-            })
+                calcScore()
+            }
 
-            // Skip question button event listener
-            $('#skip-btn-q-' + 'i').click(function () {
-                // write skip code
+            // OnSubmit event listener
+            $('#submit-btn-q-' + v).click(function () {
+                submit()
             })
 
             // Forfeit event listener
             $('#forfeit').click(function () {
+                $(".all-answers").html('')
+                submit()
                 // write forfeit code
             })
 
         }
     }
+
+
+    function calcScore() {
+        let total
+        // check userAnswer against correct answer
+        // if true assign 1, false = 0, none = null
+        // dataObj.userAnswers
+        for (let z = 0; z < dataObj.userAnswers.length; z++) {
+            // take dataObj.answers string and find indexOf it in corresponding dataObj.choices
+            // compare the dataObj.choices index to the dataObj.userAnswers second number
+            // set answersBoolean to 1 or 0
+            // display total score
+            let realAnswer = dataObj.choices[z].indexOf(dataObj.answers[z])
+            console.log("realAnswer: ", realAnswer)
+
+            
+            // let realAnswer = dataObj.answers[z]
+            // for (let y = 0; y = dataObj.choices[z].length; y++) {
+
+            // }
+
+            // let userAnswer = dataObj.userAnswers[z]
+            // console.log('userAnswer: ', userAnswer)
+            // console.log( dataObj.choices[i][[dataObj.userAnswers[i].charAt(1)]] )
+            // dataObj.choices[i][dataObj.userAnswers[i].charAt(1)] === dataObj.questions
+        }
+    }
+    calcScore()
+
 
     // Show first question
     $("#container0").removeClass('collapse')
