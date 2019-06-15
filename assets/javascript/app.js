@@ -137,13 +137,26 @@ $(document).ready(function () {
 
             $(".questionDiv").append($singleQuestionContainer)
         }
-        $("#scoreDiv").hide()
+        $("#scoreDiv").addClass("collapse")
         setTimeout(createEventListeners(), 3000)
     }
     generateHtml()
 
-
     console.log("choices.length: ", dataObj.choices.length)
+
+
+    // // Write a showFinalScore function here
+    function showFinalScore() {
+        $("#scoreDiv").removeClass("collapse")
+
+        for (let i = 0; i < dataObj.questions.length; i++) {
+            $("#qcontainer" + i).addClass('collapse')
+        }
+
+        $("#skipBtn").addClass("collapse")
+        $("#forfeit").addClass("collapse")
+        $("#tryAgain").removeClass("collapse")
+    }
 
     function createEventListeners() {
         // on show of single question run these listener setters
@@ -157,7 +170,7 @@ $(document).ready(function () {
                 $('#answer' + v + i).click(function () {
                     clickAnswer = "" + v + i
                     console.log('clickAnswer: ', clickAnswer)
-                    // set answer-buttons' colors
+                    // set answer-buttons' colors on click
                     for (let k = 0; k < dataObj.choices.length; k++) {
                         let grey = '#answer' + v + k
                         let green = '#answer' + v + i
@@ -167,6 +180,8 @@ $(document).ready(function () {
                     console.log("dataObj.userAnswers: ", dataObj.userAnswers)
                 })
             }
+
+
 
             function submit() {
                 // splice in the user answer over dummy data
@@ -188,7 +203,7 @@ $(document).ready(function () {
                 // Navigate to next question
                 let nextq = v < dataObj.choices.length ? v + 1 : null
                 $("#qcontainer" + nextq).removeClass('collapse')
-                $("#qcontainer" + (parseInt(nextq, 10) - 1)).addClass('collapse')
+                $("#qcontainer" + (parseInt(nextq, 10) - 1)).addClass('collapse') // parseInt is needed to work with zero values
 
                 // Put the answer button into a container and append to answerDiv
                 let $answerBtn = $(
@@ -223,26 +238,21 @@ $(document).ready(function () {
             }
 
 
-
-            // // Write a showFinalScore function here
-            function showFinalScore() {
-                $("#scoreDiv").show()
-
-                for (let i = 0; i < dataObj.questions.length; i++) {
-                    $("#qcontainer" + i).addClass('collapse')
-                }
-            }
-
             // OnSubmit event listener
             $('#submit-btn-q-' + v).click(function () {
                 submit()
-                $('#submit-btn-q-' + dataObj.questions.length - 1) ? showFinalScore() : null
+                dataObj.userAnswers.length === dataObj.questions.length ? showFinalScore() : null
             })
 
             // Forfeit event listener
             $('#forfeit').click(function () {
                 submit()
+                dataObj.userAnswers.length === dataObj.questions.length ? showFinalScore() : null
             })
+            // Reload on tryAgain click
+            $("#tryAgain").click(function() {
+                location.reload();
+            });
 
         }
 
@@ -252,20 +262,20 @@ $(document).ready(function () {
         // Set click event listener on the skip button
         $(".skip-btn").click(function () {
 
-            // showFinalScore()
             $(".skip-btn").attr("nextq") < dataObj.questions.length ? console.log("NOTHING") : showFinalScore()
             let nextq = $(".skip-btn").attr("nextq") < dataObj.questions.length ? $(".skip-btn").attr("nextq") : null
             $("#qcontainer" + nextq).removeClass('collapse')
             $("#qcontainer" + (parseInt(nextq, 10) - 1)).addClass('collapse')
             submit()
             $(".skip-btn").attr('nextq', (parseInt(nextq, 10) + 1))
-
+            dataObj.userAnswers.length === dataObj.questions.length ? showFinalScore() : null
             // $("#scoreDiv").show()
         })
     }
 
     // Show first question
     $("#qcontainer0").removeClass('collapse')
+
 
 });
 
