@@ -25,13 +25,12 @@ var dataObj = {
         "Japan"
     ],
 
-    userAnswers: [99, 99, 99, 99, 99],
+    // userAnswers: [99, 99, 99, 99, 99],
+    userAnswers: [],
 
-    answersBoolean: [0, 0, 0, 0, 0],
+    userAnswersBoolean: [0, 0, 0, 0, 0],
 
-    correctAnswers: 0,
-
-    incorrectAnswers: 0,
+    userScore: 0,
 
 }
 
@@ -76,7 +75,7 @@ $(document).ready(function () {
             var $singleQuestionContainer = $(
                 "<div>", {
                     class: "single-question container collapse",
-                    id: "container" + i
+                    id: "qcontainer" + i
                 }
             )
             // Create the question div
@@ -138,6 +137,7 @@ $(document).ready(function () {
 
             $(".questionDiv").append($singleQuestionContainer)
         }
+        $("#scoreDiv").hide()
         setTimeout(createEventListeners(), 3000)
     }
     generateHtml()
@@ -174,10 +174,22 @@ $(document).ready(function () {
                 dataObj.userAnswers.splice(v, 1, clickAnswer)
                 console.log("dataObj.userAnswers: ", dataObj.userAnswers)
 
+                // Check user answer against dataObj.answers and set dataObj.userAnswersBoolean to 1 or 0
+                clickAnswer !== false && clickAnswer !== 'undefined' && clickAnswer !== "" && dataObj.choices[clickAnswer[0]][clickAnswer[1]] === dataObj.answers[clickAnswer[0]] ? dataObj.userAnswersBoolean.splice(clickAnswer[0], 1, 1) : dataObj.userAnswersBoolean.splice(clickAnswer[0], 1, 0)
+                // console.log("dataObj.choices[clickAnswer[0]][clickAnswer[1]]: ", dataObj.choices[clickAnswer[0]][clickAnswer[1]])
+                console.log("dataObj.userAnswersBoolean: ", dataObj.userAnswersBoolean)
+
+
+                // Calculate and set dataObj.userScore
+                dataObj.userScore = (dataObj.userAnswersBoolean.reduce((a, b) => a + b, 0)) / dataObj.questions.length * 100 + " %"
+                console.log("dataObj.userScore: ", dataObj.userScore)
+                $(".scorePercent").text(dataObj.userScore)
+
                 // Navigate to next question
                 let nextq = v < dataObj.choices.length ? v + 1 : null
-                $("#container" + nextq).removeClass('collapse')
-                $("#container" + (parseInt(nextq, 10) - 1)).addClass('collapse')
+                $("#qcontainer" + nextq).removeClass('collapse')
+                $("#qcontainer" + (parseInt(nextq, 10) - 1)).addClass('collapse')
+
                 // Put the answer button into a container and append to answerDiv
                 let $answerBtn = $(
                     "<div>", {
@@ -186,7 +198,7 @@ $(document).ready(function () {
                         "aria-label": "Answer group"
                     }).appendTo(".answerDiv")
 
-                // 'None button' when nothing is selected on submit
+                // Add 'None button' when nothing is selected on submit
                 let $noneBtn = $(
                     "<div>", {
                         class: "btn-group mr-2",
@@ -200,68 +212,60 @@ $(document).ready(function () {
                         text: "None"
                     }
                 ).appendTo($noneBtn)
+                clickAnswer !== "" ? $("#answer" + clickAnswer).addClass("score" + clickAnswer).appendTo($answerBtn) : $noneBtn.addClass("score" + clickAnswer).appendTo(".answerDiv")
 
-                clickAnswer !== "" ? $("#answer" + clickAnswer).appendTo($answerBtn) : $noneBtn.appendTo(".answerDiv")
+                // Change button color in the Score div
+                clickAnswer !== false && clickAnswer !== 'undefined' && clickAnswer !== "" && dataObj.choices[clickAnswer[0]][clickAnswer[1]] === dataObj.answers[clickAnswer[0]] ? null : $(".score" + clickAnswer).addClass("btn-outline-danger")
+
+                // Reset clickAnswer
                 clickAnswer = ""
-                calcScore()
+
+            }
+
+
+
+            // // Write a showFinalScore function here
+            function showFinalScore() {
+                $("#scoreDiv").show()
+
+                for (let i = 0; i < dataObj.questions.length; i++) {
+                    $("#qcontainer" + i).addClass('collapse')
+                }
             }
 
             // OnSubmit event listener
             $('#submit-btn-q-' + v).click(function () {
                 submit()
+                $('#submit-btn-q-' + dataObj.questions.length - 1) ? showFinalScore() : null
             })
 
             // Forfeit event listener
             $('#forfeit').click(function () {
-                $(".all-answers").html('')
                 submit()
-                // write forfeit code
             })
 
         }
+
+
+        // Set next question to the skip button
+        $(".skip-btn").attr('nextq', 0)
+        // Set click event listener on the skip button
+        $(".skip-btn").click(function () {
+
+            // showFinalScore()
+            $(".skip-btn").attr("nextq") < dataObj.questions.length ? console.log("NOTHING") : showFinalScore()
+            let nextq = $(".skip-btn").attr("nextq") < dataObj.questions.length ? $(".skip-btn").attr("nextq") : null
+            $("#qcontainer" + nextq).removeClass('collapse')
+            $("#qcontainer" + (parseInt(nextq, 10) - 1)).addClass('collapse')
+            submit()
+            $(".skip-btn").attr('nextq', (parseInt(nextq, 10) + 1))
+
+            // $("#scoreDiv").show()
+        })
     }
-
-
-    function calcScore() {
-        let total
-        // check userAnswer against correct answer
-        // if true assign 1, false = 0, none = null
-        // dataObj.userAnswers
-        for (let z = 0; z < dataObj.userAnswers.length; z++) {
-            // take dataObj.answers string and find indexOf it in corresponding dataObj.choices
-            // compare the dataObj.choices index to the dataObj.userAnswers second number
-            // set answersBoolean to 1 or 0
-            // display total score
-            let realAnswer = dataObj.choices[z].indexOf(dataObj.answers[z])
-            console.log("realAnswer: ", realAnswer)
-
-            
-            // let realAnswer = dataObj.answers[z]
-            // for (let y = 0; y = dataObj.choices[z].length; y++) {
-
-            // }
-
-            // let userAnswer = dataObj.userAnswers[z]
-            // console.log('userAnswer: ', userAnswer)
-            // console.log( dataObj.choices[i][[dataObj.userAnswers[i].charAt(1)]] )
-            // dataObj.choices[i][dataObj.userAnswers[i].charAt(1)] === dataObj.questions
-        }
-    }
-    calcScore()
-
 
     // Show first question
-    $("#container0").removeClass('collapse')
-    // Set next question to the skip button
-    $(".skip-btn").attr('nextq', 1)
-    // Set click event listener on the skip button
-    $(".skip-btn").click(function () {
-        let nextq = $(".skip-btn").attr("nextq") < dataObj.questions.length ? $(".skip-btn").attr("nextq") : null
-        $("#container" + nextq).removeClass('collapse')
-        $("#container" + (parseInt(nextq, 10) - 1)).addClass('collapse')
-        $(".skip-btn").attr('nextq', (parseInt(nextq, 10) + 1))
-    })
-
+    $("#qcontainer0").removeClass('collapse')
 
 });
 
