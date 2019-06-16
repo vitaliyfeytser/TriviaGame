@@ -25,6 +25,14 @@ var dataObj = {
         "Japan"
     ],
 
+    timers: [
+        10,
+        10,
+        10,
+        10,
+        10
+    ],
+
     // userAnswers: [99, 99, 99, 99, 99],
     userAnswers: [],
 
@@ -129,8 +137,9 @@ $(document).ready(function () {
 
             var $timerHtml = $(
                 "<p>", {
-                    class: "lead",
-                    text: "00:03"
+                    class: "lead timer" + i,
+                    text: "03",
+
                 }
             ).appendTo($singleQuestionContainer)
 
@@ -145,6 +154,15 @@ $(document).ready(function () {
     console.log("choices.length: ", dataObj.choices.length)
 
 
+    // Show first question
+    // function begin() {
+    //     $(".intro").addClass('collapse')
+    //     $("#begin").addClass('collapse')
+    //     $("#qcontainer0").removeClass('collapse')
+    //     $(".skip-btn").removeClass('collapse')
+    //     $("#forfeit").removeClass('collapse')
+    // }
+
     // // Write a showFinalScore function here
     function showFinalScore() {
         $("#scoreDiv").removeClass("collapse")
@@ -158,11 +176,13 @@ $(document).ready(function () {
         $("#tryAgain").removeClass("collapse")
     }
 
+
     function createEventListeners() {
         // on show of single question run these listener setters
 
         for (let v = 0; v < dataObj.questions.length; v++) {
 
+            // set onclick events for answer-buttons
             for (let i = 0; i < dataObj.choices.length; i++) {
                 var clickAnswer = ""
                 // select chosen answer by id that is comprised of dataObj.questions index and 
@@ -180,8 +200,6 @@ $(document).ready(function () {
                     console.log("dataObj.userAnswers: ", dataObj.userAnswers)
                 })
             }
-
-
 
             function submit() {
                 // splice in the user answer over dummy data
@@ -238,6 +256,7 @@ $(document).ready(function () {
             }
 
 
+
             // OnSubmit event listener
             $('#submit-btn-q-' + v).click(function () {
                 submit()
@@ -250,7 +269,7 @@ $(document).ready(function () {
                 dataObj.userAnswers.length === dataObj.questions.length ? showFinalScore() : null
             })
             // Reload on tryAgain click
-            $("#tryAgain").click(function() {
+            $("#tryAgain").click(function () {
                 location.reload();
             });
 
@@ -260,22 +279,59 @@ $(document).ready(function () {
         // Set next question to the skip button
         $(".skip-btn").attr('nextq', 0)
         // Set click event listener on the skip button
-        $(".skip-btn").click(function () {
 
+        let nextQIndex
+
+        function skip(qIndex) {
+            // determine if there is a next question to go to, else display final score
             $(".skip-btn").attr("nextq") < dataObj.questions.length ? console.log("NOTHING") : showFinalScore()
-            let nextq = $(".skip-btn").attr("nextq") < dataObj.questions.length ? $(".skip-btn").attr("nextq") : null
+            // if not at the last question read the nextq attribute of the skip button
+            // let nextq = $(".skip-btn").attr("nextq") < dataObj.questions.length ? $(".skip-btn").attr("nextq") : null
+            let nextq = qIndex < dataObj.questions.length ? $(".skip-btn").attr("nextq") : null
             $("#qcontainer" + nextq).removeClass('collapse')
             $("#qcontainer" + (parseInt(nextq, 10) - 1)).addClass('collapse')
             submit()
             $(".skip-btn").attr('nextq', (parseInt(nextq, 10) + 1))
             dataObj.userAnswers.length === dataObj.questions.length ? showFinalScore() : null
-            // $("#scoreDiv").show()
+            // countdown(nextQIndex)
+        }
+
+        $(".skip-btn").click(function () {
+            let nextq = $(".skip-btn").attr("nextq") < dataObj.questions.length ? $(".skip-btn").attr("nextq") : null
+            skip(nextq)
+        })
+
+        // Timer countdown
+        function countdown(qIndex, callback) {
+            nextQIndex = parseInt(qIndex, 10) + 1
+            console.log("nextQIndex: ", nextQIndex)
+            let firstTime = $(".timer" + qIndex).text()
+            console.log("THIS IS THE TIMER! firstTime: ", firstTime)
+            let newTimer = 99
+            console.log("newTimer: ", newTimer)
+
+            setInterval(function () {
+                let timer = $(".timer" + qIndex).text()
+                if (timer >= 1) {
+                    newTimer = parseInt(timer, 10) - 1
+                    console.log("newTimer: ", newTimer)
+                    $(".timer" + qIndex).text(newTimer)
+                }
+            }, 1000)
+            
+            callback(nextQIndex)
+        }
+
+        $("#begin").click(function () {
+            $(".intro").addClass('collapse')
+            $("#begin").addClass('collapse')
+            $(".questionDiv").removeClass('collapse')
+            $("#qcontainer0").removeClass('collapse')
+            $(".skip-btn").removeClass('collapse')
+            $("#forfeit").removeClass('collapse')
+            countdown(0, skip)
         })
     }
-
-    // Show first question
-    $("#qcontainer0").removeClass('collapse')
-
 
 });
 

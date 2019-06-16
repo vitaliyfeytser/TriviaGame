@@ -3,3 +3,12 @@
     margin-bottom: 1em;
     /* margin-right: 1em; */
 }
+
+.score-line {
+    display: flex;
+    flex-flow: row;
+    margin-bottom: 1em;
+}
+.scorePercent {
+    margin-left: 1em;
+}
