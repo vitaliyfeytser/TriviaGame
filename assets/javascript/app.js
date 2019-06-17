@@ -123,7 +123,7 @@ $(document).ready(function () {
             var $timerHtml = $(
                 "<p>", {
                     class: "lead seconds timer" + i,
-                    text: "5",
+                    text: "10",
 
                 }
             ).appendTo($timerWrapper)
