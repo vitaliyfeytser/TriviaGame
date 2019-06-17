@@ -33,7 +33,6 @@ var dataObj = {
         10
     ],
 
-    // userAnswers: [99, 99, 99, 99, 99],
     userAnswers: [],
 
     userAnswersBoolean: [0, 0, 0, 0, 0],
@@ -45,34 +44,6 @@ var dataObj = {
 // CREATE HTML WITH THE ABOVE CONTENT 
 
 $(document).ready(function () {
-
-    // START PAGE WITH INSTRUCTIONS .... WRITE OUT INSTRUSTIONS FOR THE GAME
-
-    // setTimeout(function() { 
-    //     $('.answer').toggleClass('btn-outline-secondary')}, 2000)
-    // setTimeout(function(){ $('.answer').toggleClass('btn-outline-primary')}, 2000)
-    // setTimeout(function(){ $('.answer').toggleClass('btn-outline-danger')}, 2000)
-    // // setTimeout( $('.answer').toggleClass('btn-outline-primary'), 2000)
-    // // setTimeout( $('.answer').toggleClass('btn-outline-danger'), 2000)
-
-    // function myfunction() {
-    //     longfunctionfirst(shortfunctionsecond);
-    // }
-    // function longfunctionfirst(callback) {
-    //     setTimeout(function() {
-    //         $('.answer').toggleClass('btn-outline-success')
-    //         // alert('first function finished');
-    //         if(typeof callback == 'function')
-    //             callback();
-    //     }, 2000);
-    // };
-    // function shortfunctionsecond() {
-    //     setTimeout(function() {
-    //         $('.answer').toggleClass('btn-outline-danger')
-    //         // alert("second function finished")
-    //      } , 2000);
-    // };
-    // myfunction()
 
     // WRITE A FUNCTION TO GENERATE THE HTML WITH ALL THE DATA AND REPLACE THE questionsDiv
     function generateHtml() {
@@ -135,13 +106,27 @@ $(document).ready(function () {
             }
             ).appendTo($submitBtn)
 
-            var $timerHtml = $(
+            var $timerWrapper = $(
                 "<p>", {
-                    class: "lead timer" + i,
-                    text: "03",
-
+                    class: "timerWrapper score-line",
                 }
             ).appendTo($singleQuestionContainer)
+
+            var $timerTxt = $(
+                "<p>", {
+                    class: "lead timerText",
+                    text: "Seonds to guess:",
+
+                }
+            ).appendTo($timerWrapper)
+
+            var $timerHtml = $(
+                "<p>", {
+                    class: "lead seconds timer" + i,
+                    text: "5",
+
+                }
+            ).appendTo($timerWrapper)
 
 
             $(".questionDiv").append($singleQuestionContainer)
@@ -150,18 +135,6 @@ $(document).ready(function () {
         setTimeout(createEventListeners(), 3000)
     }
     generateHtml()
-
-    console.log("choices.length: ", dataObj.choices.length)
-
-
-    // Show first question
-    // function begin() {
-    //     $(".intro").addClass('collapse')
-    //     $("#begin").addClass('collapse')
-    //     $("#qcontainer0").removeClass('collapse')
-    //     $(".skip-btn").removeClass('collapse')
-    //     $("#forfeit").removeClass('collapse')
-    // }
 
     // // Write a showFinalScore function here
     function showFinalScore() {
@@ -176,9 +149,68 @@ $(document).ready(function () {
         $("#tryAgain").removeClass("collapse")
     }
 
-
+    // on show of single question run these listener setters
     function createEventListeners() {
-        // on show of single question run these listener setters
+
+        // index of the next question to navigate to
+        let currentQIndex = 0
+
+
+        function submit(v) {
+            // splice in the user answer over dummy data
+            console.log('submit clickAnswer: ', clickAnswer)
+            dataObj.userAnswers.splice(v, 1, clickAnswer)
+            console.log("dataObj.userAnswers: ", dataObj.userAnswers)
+
+            // Check user answer against dataObj.answers and set dataObj.userAnswersBoolean to 1 or 0
+            clickAnswer !== false && clickAnswer !== 'undefined' && clickAnswer !== "" && dataObj.choices[clickAnswer[0]][clickAnswer[1]] === dataObj.answers[clickAnswer[0]] ? dataObj.userAnswersBoolean.splice(clickAnswer[0], 1, 1) : dataObj.userAnswersBoolean.splice(clickAnswer[0], 1, 0)
+            // console.log("dataObj.choices[clickAnswer[0]][clickAnswer[1]]: ", dataObj.choices[clickAnswer[0]][clickAnswer[1]])
+            console.log("dataObj.userAnswersBoolean: ", dataObj.userAnswersBoolean)
+
+
+            // Calculate and set dataObj.userScore
+            dataObj.userScore = (dataObj.userAnswersBoolean.reduce((a, b) => a + b, 0)) / dataObj.questions.length * 100 + " %"
+            console.log("dataObj.userScore: ", dataObj.userScore)
+            $(".scorePercent").text(dataObj.userScore)
+
+            // Navigate to next question
+            let nextq = v < dataObj.choices.length ? v + 1 : null
+            $("#qcontainer" + nextq).removeClass('collapse')
+            $("#qcontainer" + (parseInt(nextq, 10) - 1)).addClass('collapse') // parseInt is needed to work with zero values
+
+            // Put the answer button into a container and append to answerDiv
+            let $answerBtn = $(
+                "<div>", {
+                    class: "btn-group mr-2",
+                    "role": "group",
+                    "aria-label": "Answer group"
+                }).appendTo(".answerDiv")
+
+            // Add 'None button' when nothing is selected on submit
+            let $noneBtn = $(
+                "<div>", {
+                    class: "btn-group mr-2",
+                    "role": "group",
+                    "aria-label": "Answer group"
+                })
+            let $innerNoneBtn = $(
+                "<button>", {
+                    "type": "button",
+                    class: "btn btn-outline-secondary answer answer-none",
+                    text: "None"
+                }
+            ).appendTo($noneBtn)
+            clickAnswer !== "" ? $("#answer" + clickAnswer).addClass("score" + clickAnswer).appendTo($answerBtn) : $noneBtn.addClass("score" + clickAnswer).appendTo(".answerDiv")
+
+            // Change button color in the Score div
+            clickAnswer !== false && clickAnswer !== 'undefined' && clickAnswer !== "" && dataObj.choices[clickAnswer[0]][clickAnswer[1]] === dataObj.answers[clickAnswer[0]] ? null : $(".score" + clickAnswer).addClass("btn-outline-danger")
+
+            // Reset clickAnswer
+            clickAnswer = ""
+            currentQIndex < dataObj.questions.length ? currentQIndex++ : null
+            currentQIndex < dataObj.questions.length ? countdown(currentQIndex, skip) : showFinalScore()
+        }
+
 
         for (let v = 0; v < dataObj.questions.length; v++) {
 
@@ -201,71 +233,16 @@ $(document).ready(function () {
                 })
             }
 
-            function submit() {
-                // splice in the user answer over dummy data
-                console.log('submit clickAnswer: ', clickAnswer)
-                dataObj.userAnswers.splice(v, 1, clickAnswer)
-                console.log("dataObj.userAnswers: ", dataObj.userAnswers)
-
-                // Check user answer against dataObj.answers and set dataObj.userAnswersBoolean to 1 or 0
-                clickAnswer !== false && clickAnswer !== 'undefined' && clickAnswer !== "" && dataObj.choices[clickAnswer[0]][clickAnswer[1]] === dataObj.answers[clickAnswer[0]] ? dataObj.userAnswersBoolean.splice(clickAnswer[0], 1, 1) : dataObj.userAnswersBoolean.splice(clickAnswer[0], 1, 0)
-                // console.log("dataObj.choices[clickAnswer[0]][clickAnswer[1]]: ", dataObj.choices[clickAnswer[0]][clickAnswer[1]])
-                console.log("dataObj.userAnswersBoolean: ", dataObj.userAnswersBoolean)
-
-
-                // Calculate and set dataObj.userScore
-                dataObj.userScore = (dataObj.userAnswersBoolean.reduce((a, b) => a + b, 0)) / dataObj.questions.length * 100 + " %"
-                console.log("dataObj.userScore: ", dataObj.userScore)
-                $(".scorePercent").text(dataObj.userScore)
-
-                // Navigate to next question
-                let nextq = v < dataObj.choices.length ? v + 1 : null
-                $("#qcontainer" + nextq).removeClass('collapse')
-                $("#qcontainer" + (parseInt(nextq, 10) - 1)).addClass('collapse') // parseInt is needed to work with zero values
-
-                // Put the answer button into a container and append to answerDiv
-                let $answerBtn = $(
-                    "<div>", {
-                        class: "btn-group mr-2",
-                        "role": "group",
-                        "aria-label": "Answer group"
-                    }).appendTo(".answerDiv")
-
-                // Add 'None button' when nothing is selected on submit
-                let $noneBtn = $(
-                    "<div>", {
-                        class: "btn-group mr-2",
-                        "role": "group",
-                        "aria-label": "Answer group"
-                    })
-                let $innerNoneBtn = $(
-                    "<button>", {
-                        "type": "button",
-                        class: "btn btn-outline-secondary answer answer-none",
-                        text: "None"
-                    }
-                ).appendTo($noneBtn)
-                clickAnswer !== "" ? $("#answer" + clickAnswer).addClass("score" + clickAnswer).appendTo($answerBtn) : $noneBtn.addClass("score" + clickAnswer).appendTo(".answerDiv")
-
-                // Change button color in the Score div
-                clickAnswer !== false && clickAnswer !== 'undefined' && clickAnswer !== "" && dataObj.choices[clickAnswer[0]][clickAnswer[1]] === dataObj.answers[clickAnswer[0]] ? null : $(".score" + clickAnswer).addClass("btn-outline-danger")
-
-                // Reset clickAnswer
-                clickAnswer = ""
-
-            }
-
-
-
             // OnSubmit event listener
             $('#submit-btn-q-' + v).click(function () {
-                submit()
+                submit(currentQIndex)
                 dataObj.userAnswers.length === dataObj.questions.length ? showFinalScore() : null
             })
 
             // Forfeit event listener
             $('#forfeit').click(function () {
-                submit()
+                currentQIndex = dataObj.questions.length
+                submit(currentQIndex)
                 dataObj.userAnswers.length === dataObj.questions.length ? showFinalScore() : null
             })
             // Reload on tryAgain click
@@ -274,52 +251,36 @@ $(document).ready(function () {
             });
 
         }
-
-
-        // Set next question to the skip button
-        $(".skip-btn").attr('nextq', 0)
-        // Set click event listener on the skip button
-
-        let nextQIndex
-
+        // Skip function
         function skip(qIndex) {
-            // determine if there is a next question to go to, else display final score
-            $(".skip-btn").attr("nextq") < dataObj.questions.length ? console.log("NOTHING") : showFinalScore()
-            // if not at the last question read the nextq attribute of the skip button
-            // let nextq = $(".skip-btn").attr("nextq") < dataObj.questions.length ? $(".skip-btn").attr("nextq") : null
-            let nextq = qIndex < dataObj.questions.length ? $(".skip-btn").attr("nextq") : null
-            $("#qcontainer" + nextq).removeClass('collapse')
-            $("#qcontainer" + (parseInt(nextq, 10) - 1)).addClass('collapse')
-            submit()
-            $(".skip-btn").attr('nextq', (parseInt(nextq, 10) + 1))
+            submit(qIndex)
             dataObj.userAnswers.length === dataObj.questions.length ? showFinalScore() : null
-            // countdown(nextQIndex)
         }
 
         $(".skip-btn").click(function () {
-            let nextq = $(".skip-btn").attr("nextq") < dataObj.questions.length ? $(".skip-btn").attr("nextq") : null
+            // check the nextq attribute whether there's more questions
+            let nextq = currentQIndex < dataObj.questions.length ? currentQIndex : null
+            // pass the next question index to the skip function
             skip(nextq)
+            // currentQIndex++
         })
 
         // Timer countdown
         function countdown(qIndex, callback) {
-            nextQIndex = parseInt(qIndex, 10) + 1
-            console.log("nextQIndex: ", nextQIndex)
-            let firstTime = $(".timer" + qIndex).text()
-            console.log("THIS IS THE TIMER! firstTime: ", firstTime)
-            let newTimer = 99
-            console.log("newTimer: ", newTimer)
-
-            setInterval(function () {
-                let timer = $(".timer" + qIndex).text()
-                if (timer >= 1) {
-                    newTimer = parseInt(timer, 10) - 1
-                    console.log("newTimer: ", newTimer)
-                    $(".timer" + qIndex).text(newTimer)
-                }
-            }, 1000)
             
-            callback(nextQIndex)
+            let timer = $(".timer" + qIndex).text()
+            console.log("timer: ", timer)
+            
+            setInterval(function () {
+                if (timer > 0) {
+                    timer = parseInt(timer, 10) - 1
+                    console.log("timer: ", timer)
+                    $(".timer" + qIndex).text(timer)
+                } 
+            }, 1000)
+
+            setTimeout(function() { callback(qIndex) }, (timer * 1000 ))
+
         }
 
         $("#begin").click(function () {
@@ -329,7 +290,8 @@ $(document).ready(function () {
             $("#qcontainer0").removeClass('collapse')
             $(".skip-btn").removeClass('collapse')
             $("#forfeit").removeClass('collapse')
-            countdown(0, skip)
+
+            countdown(currentQIndex, skip)
         })
     }
 
