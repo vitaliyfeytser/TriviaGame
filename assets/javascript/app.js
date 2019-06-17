@@ -16,7 +16,7 @@ var dataObj = {
         ["Captain Marvel", "Iron Man", "Thor", "Black Widow", "Loki"],
         ["George Washington", "Barack Obama", "Donald Trump", "Benjamin Franklin", "Abraham Lincoln"],
         ["Brazil", "South Africa", "Japan", "Russia", "Ukraine"],
-        ["Val", "Vitaliy", "Valeriy", "Toliy", "Pidrahooy"]
+        ["Val", "Vitaliy", "Valeriy", "Toliy", "Pidrahuy"]
     ],
 
     answers: [
@@ -76,7 +76,9 @@ $(document).ready(function () {
                 }).appendTo($singleQuestionContainer)
 
             // Generate answer buttons for the question
-            for (let k = 0; k < dataObj.choices.length; k++) {
+
+
+            for (let k = 0; k < dataObj.choices[i].length; k++) {
                 var $answerBtn = $(
                     "<div>", {
                         class: "btn-group mr-2",
