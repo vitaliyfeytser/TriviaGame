@@ -187,12 +187,13 @@ $(document).ready(function () {
                 }).appendTo(".answerDiv")
 
             // Add 'None button' when nothing is selected on submit
-            let $noneBtn = $(
-                "<div>", {
-                    class: "btn-group mr-2",
-                    "role": "group",
-                    "aria-label": "Answer group"
-                })
+            // let $noneBtn = $(
+            //     "<div>", {
+            //         class: "btn-group mr-2",
+            //         "role": "group",
+            //         "aria-label": "Answer group"
+            //     }).appendTo(".answerDiv")
+
             let $innerNoneBtn = $(
                 "<button>", {
                     "id": "none" + v,
@@ -200,8 +201,9 @@ $(document).ready(function () {
                     class: "btn btn-outline-secondary answer answer-none",
                     text: "None"
                 }
-            ).appendTo($noneBtn)
-            clickAnswer !== "" ? $("#answer" + clickAnswer).addClass("score" + clickAnswer).appendTo($answerBtn) : $noneBtn.addClass("score" + clickAnswer).appendTo(".answerDiv")
+            )
+            // .appendTo($noneBtn)
+            clickAnswer !== "" ? $("#answer" + clickAnswer).addClass("score" + clickAnswer).appendTo($answerBtn) : $innerNoneBtn.addClass("score" + clickAnswer).appendTo($answerBtn)
 
             // Change button color in the Score div
             clickAnswer !== false && clickAnswer !== 'undefined' && clickAnswer !== "" && dataObj.choices[clickAnswer[0]][clickAnswer[1]] === dataObj.answers[clickAnswer[0]] ? null : $(".score" + clickAnswer).addClass("btn-outline-danger")
