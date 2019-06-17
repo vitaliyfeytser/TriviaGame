@@ -6,7 +6,8 @@ var dataObj = {
         "Which actor plays Aquaman in 'Aquaman' of 2018?",
         "Who is the coolest Marvel superhero?",
         "Who is the greatest American President?",
-        "Which country was NOT with the Allies in World War 2?"
+        "Which country was NOT with the Allies in World War 2?",
+        "Who is coolest Feytser?"
     ],
 
     choices: [
@@ -15,6 +16,7 @@ var dataObj = {
         ["Captain Marvel", "Iron Man", "Thor", "Black Widow", "Loki"],
         ["George Washington", "Barack Obama", "Donald Trump", "Benjamin Franklin", "Abraham Lincoln"],
         ["Brazil", "South Africa", "Japan", "Russia", "Ukraine"],
+        ["Val", "Vitaliy", "Valeriy", "Toliy", "Pidrahooy"]
     ],
 
     answers: [
@@ -22,7 +24,8 @@ var dataObj = {
         "Jason Momoa",
         "Iron Man",
         "Donald Trump",
-        "Japan"
+        "Japan",
+        "Vitaliy"
     ],
 
     timers: [
