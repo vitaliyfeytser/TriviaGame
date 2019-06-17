@@ -195,6 +195,7 @@ $(document).ready(function () {
                 })
             let $innerNoneBtn = $(
                 "<button>", {
+                    "id": "none" + v,
                     "type": "button",
                     class: "btn btn-outline-secondary answer answer-none",
                     text: "None"
@@ -208,6 +209,8 @@ $(document).ready(function () {
             // Reset clickAnswer
             clickAnswer = ""
             currentQIndex < dataObj.questions.length ? currentQIndex++ : null
+            clearInterval(timerDecrease)
+            clearTimeout(timerCountdown)
             currentQIndex < dataObj.questions.length ? countdown(currentQIndex, skip) : showFinalScore()
         }
 
@@ -265,22 +268,29 @@ $(document).ready(function () {
             // currentQIndex++
         })
 
+        var timerDecrease
+        var timerCountdown
         // Timer countdown
         function countdown(qIndex, callback) {
-            
+
             let timer = $(".timer" + qIndex).text()
             console.log("timer: ", timer)
-            
-            setInterval(function () {
-                if (timer > 0) {
-                    timer = parseInt(timer, 10) - 1
-                    console.log("timer: ", timer)
-                    $(".timer" + qIndex).text(timer)
-                } 
-            }, 1000)
 
-            setTimeout(function() { callback(qIndex) }, (timer * 1000 ))
+            function timerDown() {
+                timerDecrease = setInterval(function () {
+                    if (timer > 0) {
+                        timer = parseInt(timer, 10) - 1
+                        console.log("timer: ", timer)
+                        $(".timer" + qIndex).text(timer)
+                    }
+                }, 1000)
+            }
+            timerDown()
 
+            function timerCount() {
+                timerCountdown = setTimeout(() => { callback(qIndex) }, (timer * 1000))
+            }
+            timerCount()
         }
 
         $("#begin").click(function () {
