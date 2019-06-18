@@ -28,17 +28,17 @@ var dataObj = {
         "Vitaliy"
     ],
 
-    timers: [
-        10,
-        10,
-        10,
-        10,
-        10
-    ],
+    // timers: [
+    //     10,
+    //     10,
+    //     10,
+    //     10,
+    //     10
+    // ],
 
     userAnswers: [],
 
-    userAnswersBoolean: [0, 0, 0, 0, 0],
+    userAnswersBoolean: [],
 
     userScore: 0,
 
@@ -174,7 +174,10 @@ $(document).ready(function () {
 
 
             // Calculate and set dataObj.userScore
-            dataObj.userScore = (dataObj.userAnswersBoolean.reduce((a, b) => a + b, 0)) / dataObj.questions.length * 100 + " %"
+            let score = (dataObj.userAnswersBoolean.reduce((a, b) => a + b, 0)) / dataObj.questions.length * 100
+            console.log("----------score: ", score)
+            // Math.round(score)
+            dataObj.userScore = Math.round(score) + " %"
             console.log("dataObj.userScore: ", dataObj.userScore)
             $(".scorePercent").text(dataObj.userScore)
 
@@ -214,7 +217,7 @@ $(document).ready(function () {
             clickAnswer !== false && clickAnswer !== 'undefined' && clickAnswer !== "" && dataObj.choices[clickAnswer[0]][clickAnswer[1]] === dataObj.answers[clickAnswer[0]] ? null : $(".score" + clickAnswer).addClass("btn-outline-danger")
 
             // Reset clickAnswer
-            clickAnswer = ""
+            clickAnswer = (v + 1) + "99"
             currentQIndex < dataObj.questions.length ? currentQIndex++ : null
             clearInterval(timerDecrease)
             clearTimeout(timerCountdown)
