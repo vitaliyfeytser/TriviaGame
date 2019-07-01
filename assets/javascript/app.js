@@ -16,7 +16,7 @@ var dataObj = {
         ["Captain Marvel", "Iron Man", "Thor", "Black Widow", "Loki"],
         ["George Washington", "Barack Obama", "Donald Trump", "Benjamin Franklin", "Abraham Lincoln"],
         ["Brazil", "South Africa", "Japan", "Russia", "Ukraine"],
-        ["Val", "Vitaliy", "Valeriy", "Toliy", "Pidrahuy"]
+        ["Val", "Vitaliy", "Valeriy", "Toliy", "Jimmy"]
     ],
 
     answers: [
@@ -27,14 +27,6 @@ var dataObj = {
         "Japan",
         "Vitaliy"
     ],
-
-    // timers: [
-    //     10,
-    //     10,
-    //     10,
-    //     10,
-    //     10
-    // ],
 
     userAnswers: [],
 
