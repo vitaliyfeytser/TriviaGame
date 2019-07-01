@@ -44,7 +44,6 @@ $(document).ready(function () {
     function generateHtml() {
 
         for (let i = 0; i < dataObj.questions.length; i++) {
-            // let i = 1
             // Create the single question container div
             var $singleQuestionContainer = $(
                 "<div>", {
@@ -68,8 +67,6 @@ $(document).ready(function () {
                 }).appendTo($singleQuestionContainer)
 
             // Generate answer buttons for the question
-
-
             for (let k = 0; k < dataObj.choices[i].length; k++) {
                 var $answerBtn = $(
                     "<div>", {
@@ -87,7 +84,6 @@ $(document).ready(function () {
                     }
                 ).appendTo($answerBtn)
             }
-
 
             // Generate the answer submit button
             var $submitBtn = $(
@@ -125,7 +121,6 @@ $(document).ready(function () {
                 }
             ).appendTo($timerWrapper)
 
-
             $(".questionDiv").append($singleQuestionContainer)
         }
         $("#scoreDiv").addClass("collapse")
@@ -133,7 +128,7 @@ $(document).ready(function () {
     }
     generateHtml()
 
-    // // Write a showFinalScore function here
+    // Write a showFinalScore function here
     function showFinalScore() {
         $("#scoreDiv").removeClass("collapse")
 
@@ -155,22 +150,16 @@ $(document).ready(function () {
 
         function submit(v) {
             // splice in the user answer over dummy data
-            console.log('submit clickAnswer: ', clickAnswer)
             dataObj.userAnswers.splice(v, 1, clickAnswer)
-            console.log("dataObj.userAnswers: ", dataObj.userAnswers)
 
             // Check user answer against dataObj.answers and set dataObj.userAnswersBoolean to 1 or 0
             clickAnswer !== false && clickAnswer !== 'undefined' && clickAnswer !== "" && dataObj.choices[clickAnswer[0]][clickAnswer[1]] === dataObj.answers[clickAnswer[0]] ? dataObj.userAnswersBoolean.splice(clickAnswer[0], 1, 1) : dataObj.userAnswersBoolean.splice(clickAnswer[0], 1, 0)
-            // console.log("dataObj.choices[clickAnswer[0]][clickAnswer[1]]: ", dataObj.choices[clickAnswer[0]][clickAnswer[1]])
-            console.log("dataObj.userAnswersBoolean: ", dataObj.userAnswersBoolean)
-
 
             // Calculate and set dataObj.userScore
             let score = (dataObj.userAnswersBoolean.reduce((a, b) => a + b, 0)) / dataObj.questions.length * 100
-            console.log("----------score: ", score)
+
             // Math.round(score)
             dataObj.userScore = Math.round(score) + " %"
-            console.log("dataObj.userScore: ", dataObj.userScore)
             $(".scorePercent").text(dataObj.userScore)
 
             // Navigate to next question
@@ -185,14 +174,6 @@ $(document).ready(function () {
                     "role": "group",
                     "aria-label": "Answer group"
                 }).appendTo(".answerDiv")
-
-            // Add 'None button' when nothing is selected on submit
-            // let $noneBtn = $(
-            //     "<div>", {
-            //         class: "btn-group mr-2",
-            //         "role": "group",
-            //         "aria-label": "Answer group"
-            //     }).appendTo(".answerDiv")
 
             let $innerNoneBtn = $(
                 "<button>", {
@@ -223,10 +204,8 @@ $(document).ready(function () {
             for (let i = 0; i < dataObj.choices.length; i++) {
                 var clickAnswer = ""
                 // select chosen answer by id that is comprised of dataObj.questions index and 
-                // dataObj.choices index
                 $('#answer' + v + i).click(function () {
                     clickAnswer = "" + v + i
-                    console.log('clickAnswer: ', clickAnswer)
                     // set answer-buttons' colors on click
                     for (let k = 0; k < dataObj.choices.length; k++) {
                         let grey = '#answer' + v + k
@@ -234,7 +213,6 @@ $(document).ready(function () {
                         $(grey).addClass('btn-outline-secondary').removeClass('btn-outline-success')
                         $(green).addClass('btn-outline-success').removeClass('btn-outline-secondary')
                     }
-                    console.log("dataObj.userAnswers: ", dataObj.userAnswers)
                 })
             }
 
@@ -267,22 +245,20 @@ $(document).ready(function () {
             let nextq = currentQIndex < dataObj.questions.length ? currentQIndex : null
             // pass the next question index to the skip function
             skip(nextq)
-            // currentQIndex++
         })
 
+        // Timer countdown
         var timerDecrease
         var timerCountdown
-        // Timer countdown
+
         function countdown(qIndex, callback) {
 
             let timer = $(".timer" + qIndex).text()
-            console.log("timer: ", timer)
 
             function timerDown() {
                 timerDecrease = setInterval(function () {
                     if (timer > 0) {
                         timer = parseInt(timer, 10) - 1
-                        console.log("timer: ", timer)
                         $(".timer" + qIndex).text(timer)
                     }
                 }, 1000)
